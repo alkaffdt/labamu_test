@@ -25,13 +25,20 @@ class ProductRepositoryImpl implements ProductRepository {
         page: page,
         limit: limit,
       );
+
+      if (page == 1) {
+        await localDataSource.clearProducts();
+      }
+
       // If successful, update local cache
-      await localDataSource.clearProducts();
       await localDataSource.saveProducts(remoteProducts);
       return remoteProducts;
     } catch (e) {
       // If remote fails, try to fetch from local
-      final localProducts = await localDataSource.getProducts();
+      final localProducts = await localDataSource.getProducts(
+        limit: limit,
+        offset: (page - 1) * limit,
+      );
       if (localProducts.isNotEmpty) {
         return localProducts;
       }
