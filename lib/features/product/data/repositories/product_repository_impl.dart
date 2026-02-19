@@ -1,3 +1,4 @@
+import 'package:labamu_test/core/configs/app_config.dart';
 import 'package:labamu_test/features/product/domain/models/product_model.dart';
 
 import '../../domain/repositories/product_repository.dart';
@@ -14,10 +15,16 @@ class ProductRepositoryImpl implements ProductRepository {
   });
 
   @override
-  Future<List<Product>> getProducts() async {
+  Future<List<Product>> getProducts({
+    int page = 1,
+    int limit = AppConfig.pageLimit,
+  }) async {
     try {
       // Try to fetch from remote
-      final remoteProducts = await remoteDataSource.getProducts();
+      final remoteProducts = await remoteDataSource.getProducts(
+        page: page,
+        limit: limit,
+      );
       // If successful, update local cache
       await localDataSource.clearProducts();
       await localDataSource.saveProducts(remoteProducts);

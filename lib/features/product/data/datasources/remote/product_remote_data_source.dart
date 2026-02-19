@@ -1,8 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:labamu_test/core/configs/app_config.dart';
 import 'package:labamu_test/features/product/domain/models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<List<Product>> getProducts();
+  Future<List<Product>> getProducts({
+    int page = 1,
+    int limit = AppConfig.pageLimit,
+  });
   Future<bool> createProduct(Product product);
   Future<bool> updateProduct(Product product);
 }
@@ -13,8 +17,13 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   ProductRemoteDataSourceImpl(this._dio);
 
   @override
-  Future<List<Product>> getProducts() async {
-    final response = await _dio.get('/products?_sort=updatedAt&_order=desc');
+  Future<List<Product>> getProducts({
+    int page = 1,
+    int limit = AppConfig.pageLimit,
+  }) async {
+    final response = await _dio.get(
+      '/products?_sort=updatedAt&_order=desc&_page=$page&_limit=$limit',
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = response.data;
