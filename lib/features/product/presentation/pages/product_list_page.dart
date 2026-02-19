@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:labamu_test/core/common_widgets/app_dialogs.dart';
+import 'package:labamu_test/extensions/navigation_extension.dart';
+import 'package:labamu_test/features/product/domain/models/submission_status_state.dart';
 import 'package:labamu_test/features/product/presentation/pages/add_product_dialog.dart';
+import 'package:labamu_test/features/product/presentation/providers/add_product_controller_provider.dart';
 import '../providers/products_provider.dart';
 import '../widgets/product_item_card.dart';
 
@@ -10,6 +14,28 @@ class ProductListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsyncValue = ref.watch(productsProvider);
+
+    ref.listen(
+      addProductControllerProvider.select((value) => value.submissionStatus),
+      (previous, next) {
+        switch (next) {
+          case SubmissionStatus.loading:
+            AppDialog.showLoadingDialog(context);
+            break;
+          case SubmissionStatus.success:
+            context.pop();
+            AppDialog.showSuccessDialog(
+              context,
+              message: 'Product added successfully',
+            );
+            break;
+
+          default:
+            context.pop();
+            break;
+        }
+      },
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

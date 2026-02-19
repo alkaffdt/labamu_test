@@ -104,15 +104,7 @@ class _SubmitButton extends ConsumerWidget {
       ),
       onPressed: isValidated
           ? () async {
-              final isSubmitted = await ref
-                  .read(addProductControllerProvider.notifier)
-                  .submitProduct();
-              if (isSubmitted && context.mounted) {
-                ref.invalidate(productsProvider);
-
-                // TODO: close dialog
-                context.pop();
-              }
+              ref.read(addProductControllerProvider.notifier).submitProduct();
             }
           : null,
       child: Text('Add Product').textColor(Colors.white),

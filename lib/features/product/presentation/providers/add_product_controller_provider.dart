@@ -1,16 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:labamu_test/features/product/data/models/add_product_state.dart';
+import 'package:labamu_test/features/product/domain/models/add_product_state.dart';
 import 'package:labamu_test/features/product/domain/models/product_model.dart';
+import 'package:labamu_test/features/product/domain/models/submission_status_state.dart';
 import 'package:labamu_test/features/product/domain/repositories/product_repository.dart';
 import 'package:labamu_test/features/product/presentation/providers/products_provider.dart';
 
 final addProductControllerProvider =
-    StateNotifierProvider<AddProductController, Product>((ref) {
+    StateNotifierProvider<AddProductController, AddProductState>((ref) {
       return AddProductController(ref.watch(productRepositoryProvider));
     });
 
-class AddProductController extends StateNotifier<Product> {
-  AddProductController(this.productRepository) : super(Product());
+class AddProductController extends StateNotifier<AddProductState> {
+  AddProductController(this.productRepository) : super(AddProductState());
 
   final ProductRepository productRepository;
 
@@ -26,8 +27,8 @@ class AddProductController extends StateNotifier<Product> {
     state = state.copyWith(description: description);
   }
 
-  void reset() {
-    state = Product();
+  void resetState() {
+    state = const AddProductState();
   }
 
   void onActiveChanged(bool active) {
@@ -40,20 +41,25 @@ class AddProductController extends StateNotifier<Product> {
         state.description != null;
   }
 
-  Future<bool> submitProduct() async {
+  Future<void> submitProduct() async {
     try {
-      // Update the product with current timestamp
-      state = state.copyWith(updatedAt: DateTime.now());
-      //
-      final isSubmitted = await productRepository.createProduct(state);
-      if (isSubmitted) {
-        reset();
-        return true;
-      }
+      state = state.copyWith(submissionStatus: SubmissionStatus.loading);
 
-      return false;
+      final product = Product(
+        name: state.name!,
+        price: state.price!,
+        description: state.description!,
+        status: state.status,
+        updatedAt: DateTime.now(),
+      );
+      //
+      final isSubmitted = await productRepository.createProduct(product);
+      if (isSubmitted) {
+        resetState();
+        state = state.copyWith(submissionStatus: SubmissionStatus.success);
+      }
     } catch (error) {
-      return false;
+      state = state.copyWith(submissionStatus: SubmissionStatus.error);
     }
   }
 }

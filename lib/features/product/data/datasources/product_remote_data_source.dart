@@ -31,10 +31,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
   @override
   Future<bool> createProduct(Product product) async {
-    var data = product.toJson();
+    final response = await _dio.post('/products', data: product.toJson());
+
+    final data = product.toJson();
     data.remove('id');
-    //
-    final response = await _dio.post('/products', data: data);
 
     if (response.statusCode == 201) {
       return true;
