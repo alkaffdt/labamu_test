@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:labamu_test/core/common_widgets/app_dialogs.dart';
 import 'package:labamu_test/extensions/navigation_extension.dart';
+import 'package:labamu_test/features/product/domain/models/product_model.dart';
 import 'package:labamu_test/features/product/domain/models/submission_status_state.dart';
 import 'package:labamu_test/features/product/presentation/pages/add_product_dialog.dart';
 import 'package:labamu_test/features/product/presentation/providers/add_product_controller_provider.dart';
+import 'package:labamu_test/features/product/presentation/providers/product_pagination_controller_provider.dart';
 import 'package:labamu_test/features/product/presentation/providers/product_provider.dart';
 import '../widgets/product_item_card.dart';
 
@@ -38,6 +41,8 @@ class ProductListPage extends ConsumerWidget {
       },
     );
 
+    final pagingController = ref.watch(productsPagingControllerProvider);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -60,16 +65,26 @@ class ProductListPage extends ConsumerWidget {
               child: const Icon(Icons.add, color: Colors.white),
             )
           : null,
-      body: productsAsyncValue.when(
-        data: (products) => ListView.builder(
-          padding: const EdgeInsets.only(bottom: 80),
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            return ProductItemCard(product: products[index]);
-          },
+      body: PagedListView<int, Product>(
+        pagingController: pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Product>(
+          // Loadings
+          firstPageProgressIndicatorBuilder: (context) =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+          newPageProgressIndicatorBuilder: (context) =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+          // Empty view
+          noItemsFoundIndicatorBuilder: (context) =>
+              const Center(child: Text('No products found')),
+          // Error views
+          firstPageErrorIndicatorBuilder: (context) =>
+              Center(child: Text('Error: ${pagingController.error}')),
+          newPageErrorIndicatorBuilder: (context) =>
+              Center(child: Text('Error: ${pagingController.error}')),
+          //
+          itemBuilder: (context, product, index) =>
+              ProductItemCard(product: product),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
       ),
     );
   }
