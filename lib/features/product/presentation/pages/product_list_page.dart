@@ -28,6 +28,7 @@ class ProductListPage extends ConsumerWidget {
               context,
               message: 'Product added successfully',
             );
+            ref.invalidate(productsProvider);
             break;
 
           default:
@@ -47,6 +48,8 @@ class ProductListPage extends ConsumerWidget {
           ? FloatingActionButton(
               backgroundColor: Colors.blue[900],
               onPressed: () {
+                ref.read(addProductControllerProvider.notifier).resetState();
+
                 showModalBottomSheet(
                   useSafeArea: true,
                   context: context,

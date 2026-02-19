@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddProductState {
 
- SubmissionStatus get submissionStatus; String? get name; int? get price; String? get description; String get status;
+ SubmissionStatus get submissionStatus; String? get id; String? get name; int? get price; String? get description; String get status;
 /// Create a copy of AddProductState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AddProductStateCopyWith<AddProductState> get copyWith => _$AddProductStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddProductState&&(identical(other.submissionStatus, submissionStatus) || other.submissionStatus == submissionStatus)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.description, description) || other.description == description)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddProductState&&(identical(other.submissionStatus, submissionStatus) || other.submissionStatus == submissionStatus)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.description, description) || other.description == description)&&(identical(other.status, status) || other.status == status));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,submissionStatus,name,price,description,status);
+int get hashCode => Object.hash(runtimeType,submissionStatus,id,name,price,description,status);
 
 @override
 String toString() {
-  return 'AddProductState(submissionStatus: $submissionStatus, name: $name, price: $price, description: $description, status: $status)';
+  return 'AddProductState(submissionStatus: $submissionStatus, id: $id, name: $name, price: $price, description: $description, status: $status)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AddProductStateCopyWith<$Res>  {
   factory $AddProductStateCopyWith(AddProductState value, $Res Function(AddProductState) _then) = _$AddProductStateCopyWithImpl;
 @useResult
 $Res call({
- SubmissionStatus submissionStatus, String? name, int? price, String? description, String status
+ SubmissionStatus submissionStatus, String? id, String? name, int? price, String? description, String status
 });
 
 
@@ -62,10 +62,11 @@ class _$AddProductStateCopyWithImpl<$Res>
 
 /// Create a copy of AddProductState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? submissionStatus = null,Object? name = freezed,Object? price = freezed,Object? description = freezed,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? submissionStatus = null,Object? id = freezed,Object? name = freezed,Object? price = freezed,Object? description = freezed,Object? status = null,}) {
   return _then(_self.copyWith(
 submissionStatus: null == submissionStatus ? _self.submissionStatus : submissionStatus // ignore: cast_nullable_to_non_nullable
-as SubmissionStatus,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as SubmissionStatus,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as int?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SubmissionStatus submissionStatus,  String? name,  int? price,  String? description,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SubmissionStatus submissionStatus,  String? id,  String? name,  int? price,  String? description,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddProductState() when $default != null:
-return $default(_that.submissionStatus,_that.name,_that.price,_that.description,_that.status);case _:
+return $default(_that.submissionStatus,_that.id,_that.name,_that.price,_that.description,_that.status);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.submissionStatus,_that.name,_that.price,_that.description,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SubmissionStatus submissionStatus,  String? name,  int? price,  String? description,  String status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SubmissionStatus submissionStatus,  String? id,  String? name,  int? price,  String? description,  String status)  $default,) {final _that = this;
 switch (_that) {
 case _AddProductState():
-return $default(_that.submissionStatus,_that.name,_that.price,_that.description,_that.status);case _:
+return $default(_that.submissionStatus,_that.id,_that.name,_that.price,_that.description,_that.status);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.submissionStatus,_that.name,_that.price,_that.description,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SubmissionStatus submissionStatus,  String? name,  int? price,  String? description,  String status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SubmissionStatus submissionStatus,  String? id,  String? name,  int? price,  String? description,  String status)?  $default,) {final _that = this;
 switch (_that) {
 case _AddProductState() when $default != null:
-return $default(_that.submissionStatus,_that.name,_that.price,_that.description,_that.status);case _:
+return $default(_that.submissionStatus,_that.id,_that.name,_that.price,_that.description,_that.status);case _:
   return null;
 
 }
@@ -210,10 +211,11 @@ return $default(_that.submissionStatus,_that.name,_that.price,_that.description,
 
 
 class _AddProductState implements AddProductState {
-  const _AddProductState({this.submissionStatus = SubmissionStatus.initial, this.name, this.price, this.description, this.status = 'ACTIVE'});
+  const _AddProductState({this.submissionStatus = SubmissionStatus.initial, this.id, this.name, this.price, this.description, this.status = 'active'});
   
 
 @override@JsonKey() final  SubmissionStatus submissionStatus;
+@override final  String? id;
 @override final  String? name;
 @override final  int? price;
 @override final  String? description;
@@ -229,16 +231,16 @@ _$AddProductStateCopyWith<_AddProductState> get copyWith => __$AddProductStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddProductState&&(identical(other.submissionStatus, submissionStatus) || other.submissionStatus == submissionStatus)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.description, description) || other.description == description)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddProductState&&(identical(other.submissionStatus, submissionStatus) || other.submissionStatus == submissionStatus)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.description, description) || other.description == description)&&(identical(other.status, status) || other.status == status));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,submissionStatus,name,price,description,status);
+int get hashCode => Object.hash(runtimeType,submissionStatus,id,name,price,description,status);
 
 @override
 String toString() {
-  return 'AddProductState(submissionStatus: $submissionStatus, name: $name, price: $price, description: $description, status: $status)';
+  return 'AddProductState(submissionStatus: $submissionStatus, id: $id, name: $name, price: $price, description: $description, status: $status)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$AddProductStateCopyWith<$Res> implements $AddProductState
   factory _$AddProductStateCopyWith(_AddProductState value, $Res Function(_AddProductState) _then) = __$AddProductStateCopyWithImpl;
 @override @useResult
 $Res call({
- SubmissionStatus submissionStatus, String? name, int? price, String? description, String status
+ SubmissionStatus submissionStatus, String? id, String? name, int? price, String? description, String status
 });
 
 
@@ -266,10 +268,11 @@ class __$AddProductStateCopyWithImpl<$Res>
 
 /// Create a copy of AddProductState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? submissionStatus = null,Object? name = freezed,Object? price = freezed,Object? description = freezed,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? submissionStatus = null,Object? id = freezed,Object? name = freezed,Object? price = freezed,Object? description = freezed,Object? status = null,}) {
   return _then(_AddProductState(
 submissionStatus: null == submissionStatus ? _self.submissionStatus : submissionStatus // ignore: cast_nullable_to_non_nullable
-as SubmissionStatus,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as SubmissionStatus,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as int?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable

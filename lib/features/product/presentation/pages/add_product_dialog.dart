@@ -28,6 +28,7 @@ class CreateProductDialog extends ConsumerWidget {
             ),
             24.toHeightGap(),
             TextField(
+              controller: controller.nameController,
               onChanged: (value) => controller.onNameChanged(value),
               decoration: const InputDecoration(
                 labelText: 'Product Name',
@@ -36,9 +37,10 @@ class CreateProductDialog extends ConsumerWidget {
             ),
             16.toHeightGap(),
             TextField(
+              controller: controller.priceController,
               onChanged: (value) =>
                   controller.onPriceChanged(int.tryParse(value) ?? 0),
-              keyboardType: .number,
+              keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Price',
                 border: OutlineInputBorder(),
@@ -46,6 +48,7 @@ class CreateProductDialog extends ConsumerWidget {
             ),
             16.toHeightGap(),
             TextField(
+              controller: controller.descriptionController,
               minLines: 3,
               maxLines: 7,
               onChanged: (value) => controller.onDescriptionChanged(value),
@@ -72,7 +75,7 @@ class _ActiveSwitch extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(addProductControllerProvider.notifier);
-    final isActive = ref.watch(addProductControllerProvider).status == 'ACTIVE';
+    final isActive = ref.watch(addProductControllerProvider).status == 'active';
 
     return Row(
       children: [
@@ -97,6 +100,8 @@ class _SubmitButton extends ConsumerWidget {
         .watch(addProductControllerProvider.notifier)
         .isFormValid;
 
+    final isUpdate = ref.watch(addProductControllerProvider).id != null;
+
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: isValidated ? Colors.blue[800] : Colors.grey[400],
@@ -107,7 +112,9 @@ class _SubmitButton extends ConsumerWidget {
               ref.read(addProductControllerProvider.notifier).submitProduct();
             }
           : null,
-      child: Text('Add Product').textColor(Colors.white),
+      child: Text(
+        isUpdate ? 'Update Product' : 'Add Product',
+      ).textColor(Colors.white),
     );
   }
 }

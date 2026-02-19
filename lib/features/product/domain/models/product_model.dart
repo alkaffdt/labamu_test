@@ -17,7 +17,7 @@ class Product extends Equatable {
     this.name,
     this.price,
     this.description,
-    this.status = 'ACTIVE',
+    this.status = 'active',
     this.updatedAt,
   });
 

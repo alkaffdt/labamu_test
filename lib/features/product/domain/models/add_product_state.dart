@@ -8,9 +8,10 @@ part 'add_product_state.freezed.dart';
 abstract class AddProductState with _$AddProductState {
   const factory AddProductState({
     @Default(SubmissionStatus.initial) SubmissionStatus submissionStatus,
+    String? id,
     String? name,
     int? price,
     String? description,
-    @Default('ACTIVE') String status,
+    @Default('active') String status,
   }) = _AddProductState;
 }
