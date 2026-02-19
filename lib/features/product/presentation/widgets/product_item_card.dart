@@ -28,7 +28,7 @@ class ProductItemCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    product.name,
+                    product.name ?? '',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -47,7 +47,7 @@ class ProductItemCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    product.status.toUpperCase(),
+                    product.status?.toUpperCase() ?? '',
                     style: TextStyle(
                       color: product.status == 'active'
                           ? Colors.green.shade800
@@ -61,7 +61,7 @@ class ProductItemCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              product.description,
+              product.description ?? '',
               style: TextStyle(color: Colors.grey.shade600),
             ),
             const SizedBox(height: 12),
@@ -69,11 +69,15 @@ class ProductItemCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  dateFormatter.format(product.updatedAt),
+                  product.updatedAt != null
+                      ? dateFormatter.format(product.updatedAt!)
+                      : '',
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                 ),
                 Text(
-                  currencyFormatter.format(product.price),
+                  product.price != null
+                      ? currencyFormatter.format(product.price!)
+                      : '',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

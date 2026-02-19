@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/product_provider.dart';
+import 'package:labamu_test/features/product/presentation/pages/add_product_dialog.dart';
+import '../providers/products_provider.dart';
 import '../widgets/product_item_card.dart';
 
 class ProductListPage extends ConsumerWidget {
@@ -11,20 +12,28 @@ class ProductListPage extends ConsumerWidget {
     final productsAsyncValue = ref.watch(productsProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Product List'),
+        title: const Text('Products', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[900],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              // TODO: Implement add product functionality
-            },
-          ),
-        ],
       ),
+      floatingActionButton: productsAsyncValue.asData?.hasValue ?? false
+          ? FloatingActionButton(
+              backgroundColor: Colors.blue[900],
+              onPressed: () {
+                showModalBottomSheet(
+                  useSafeArea: true,
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => const CreateProductDialog(),
+                );
+              },
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
       body: productsAsyncValue.when(
         data: (products) => ListView.builder(
+          padding: const EdgeInsets.only(bottom: 80),
           itemCount: products.length,
           itemBuilder: (context, index) {
             return ProductItemCard(product: products[index]);

@@ -11,4 +11,19 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<List<Product>> getProducts() async {
     return remoteDataSource.getProducts();
   }
+
+  @override
+  Future<bool> createProduct(Product product) async {
+    return remoteDataSource.createProduct(product);
+  }
+
+  // @override
+  // Future<bool> updateProduct(Product product) async {
+  //   return remoteDataSource.updateProduct(product);
+  // }
+
+  // @override
+  // Future<bool> deleteProduct(String id) async {
+  //   return remoteDataSource.deleteProduct(id);
+  // }
 }
