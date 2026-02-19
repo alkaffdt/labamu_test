@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:labamu_test/extensions/int_extensions.dart';
-import 'package:labamu_test/extensions/navigation_extension.dart';
 import 'package:labamu_test/extensions/text_style_extension.dart';
 import 'package:labamu_test/features/product/presentation/providers/add_product_controller_provider.dart';
-import 'package:labamu_test/features/product/presentation/providers/products_provider.dart';
 
 class CreateProductDialog extends ConsumerWidget {
   const CreateProductDialog({super.key});

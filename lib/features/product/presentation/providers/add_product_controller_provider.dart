@@ -4,7 +4,7 @@ import 'package:labamu_test/features/product/domain/models/add_product_state.dar
 import 'package:labamu_test/features/product/domain/models/product_model.dart';
 import 'package:labamu_test/features/product/domain/models/submission_status_state.dart';
 import 'package:labamu_test/features/product/domain/repositories/product_repository.dart';
-import 'package:labamu_test/features/product/presentation/providers/products_provider.dart';
+import 'package:labamu_test/features/product/presentation/providers/product_provider.dart';
 
 final addProductControllerProvider =
     StateNotifierProvider<AddProductController, AddProductState>((ref) {

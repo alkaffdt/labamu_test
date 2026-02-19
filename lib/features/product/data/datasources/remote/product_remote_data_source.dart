@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../domain/models/product_model.dart';
+import 'package:labamu_test/features/product/domain/models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<List<Product>> getProducts();

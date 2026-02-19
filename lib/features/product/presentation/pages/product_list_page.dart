@@ -5,7 +5,7 @@ import 'package:labamu_test/extensions/navigation_extension.dart';
 import 'package:labamu_test/features/product/domain/models/submission_status_state.dart';
 import 'package:labamu_test/features/product/presentation/pages/add_product_dialog.dart';
 import 'package:labamu_test/features/product/presentation/providers/add_product_controller_provider.dart';
-import '../providers/products_provider.dart';
+import 'package:labamu_test/features/product/presentation/providers/product_provider.dart';
 import '../widgets/product_item_card.dart';
 
 class ProductListPage extends ConsumerWidget {
