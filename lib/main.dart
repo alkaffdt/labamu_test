@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:labamu_test/core/database/app_database.dart';
-import 'package:labamu_test/features/product/data/models/product_dao.dart';
-import 'package:labamu_test/features/product/domain/models/product_model.dart';
+import 'package:labamu_test/core/sync/sync_manager_provider.dart';
 import 'features/product/presentation/pages/product_list_page.dart';
 
 void main() async {
@@ -11,8 +9,21 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(syncManagerProvider).init();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

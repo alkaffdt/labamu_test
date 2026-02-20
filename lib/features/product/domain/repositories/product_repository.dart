@@ -9,4 +9,6 @@ abstract class ProductRepository {
   Future<bool> createProduct(Product product);
   Future<bool> updateProduct(Product product);
   // Future<bool> deleteProduct(String id);
+  //
+  Future<void> syncPendingProducts();
 }

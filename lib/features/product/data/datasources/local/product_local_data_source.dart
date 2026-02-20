@@ -1,5 +1,6 @@
 import 'package:labamu_test/core/configs/app_config.dart';
 import 'package:labamu_test/core/database/database_service.dart';
+import 'package:labamu_test/features/product/data/models/product_db_mapper.dart';
 import 'package:labamu_test/features/product/domain/models/product_model.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -9,7 +10,10 @@ abstract class ProductLocalDataSource {
     int offset = 0,
   });
   Future<void> saveProducts(List<Product> products);
+  Future<List<Product>> getUnsyncedProducts();
+  Future<void> markAsSynced(String id);
   Future<void> clearProducts();
+  Future<void> insertProduct(Product product, {required bool isSynced});
 }
 
 class ProductLocalDataSourceImpl implements ProductLocalDataSource {
@@ -28,19 +32,25 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
       'products',
       limit: limit,
       offset: offset,
-      orderBy: 'updatedAt DESC', // penting supaya paging stabil
+      orderBy: 'updatedAt DESC',
     );
 
-    return maps.map((map) {
-      return Product(
-        id: map['id'] as String,
-        name: map['name'] as String,
-        price: map['price'] as int,
-        description: map['description'] as String,
-        status: map['status'] as String,
-        updatedAt: DateTime.parse(map['updatedAt'] as String),
-      );
-    }).toList();
+    return maps.map(ProductDbMapper.fromDb).toList();
+  }
+
+  @override
+  Future<void> insertProduct(Product product, {required bool isSynced}) async {
+    final db = await _databaseService.database;
+
+    final dbMap = product.toDb();
+
+    dbMap['is_synced'] = isSynced ? 1 : 0;
+
+    await db.insert(
+      'products',
+      dbMap,
+      conflictAlgorithm: ConflictAlgorithm.abort,
+    );
   }
 
   @override
@@ -48,18 +58,47 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     final db = await _databaseService.database;
     final batch = db.batch();
 
-    for (var product in products) {
-      batch.insert('products', {
-        'id': product.id,
-        'name': product.name,
-        'price': product.price,
-        'description': product.description,
-        'status': product.status,
-        'updatedAt': product.updatedAt?.toIso8601String(),
-      }, conflictAlgorithm: ConflictAlgorithm.replace);
+    for (final product in products) {
+      final map = product.toDb();
+
+      // update if the data existed
+      batch.update('products', map, where: 'id = ?', whereArgs: [product.id]);
+
+      // insert else ignore
+      batch.insert(
+        'products',
+        map,
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
     }
 
     await batch.commit(noResult: true);
+  }
+
+  @override
+  Future<List<Product>> getUnsyncedProducts() async {
+    final db = await _databaseService.database;
+
+    final maps = await db.query(
+      'products',
+      where: 'is_synced = ?',
+      whereArgs: [0],
+      orderBy: 'updatedAt ASC',
+    );
+
+    return maps.map(ProductDbMapper.fromDb).toList();
+  }
+
+  @override
+  Future<void> markAsSynced(String id) async {
+    final db = await _databaseService.database;
+
+    await db.update(
+      'products',
+      {'is_synced': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   @override

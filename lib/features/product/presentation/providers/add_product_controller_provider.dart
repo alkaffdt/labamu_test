@@ -65,7 +65,7 @@ class AddProductController extends StateNotifier<AddProductState> {
 
   Future<void> updateProduct() async {
     try {
-      state = state.copyWith(submissionStatus: SubmissionStatus.loading);
+      // state = state.copyWith(submissionStatus: SubmissionStatus.loading);
 
       final product = Product(
         id: state.id!,
@@ -93,7 +93,7 @@ class AddProductController extends StateNotifier<AddProductState> {
         return;
       }
 
-      state = state.copyWith(submissionStatus: SubmissionStatus.loading);
+      // state = state.copyWith(submissionStatus: SubmissionStatus.loading);
 
       final product = Product(
         name: state.name!,
@@ -103,13 +103,16 @@ class AddProductController extends StateNotifier<AddProductState> {
         updatedAt: DateTime.now(),
       );
       //
-      final isSubmitted = await productRepository.createProduct(product);
-      if (isSubmitted) {
+      final isPosted = await productRepository.createProduct(product);
+      if (isPosted) {
         resetState();
         state = state.copyWith(submissionStatus: SubmissionStatus.success);
+      } else {
+        state = state.copyWith(submissionStatus: SubmissionStatus.error);
       }
     } catch (error) {
-      state = state.copyWith(submissionStatus: SubmissionStatus.error);
+      // Log euy
+      // state = state.copyWith(submissionStatus: SubmissionStatus.error);
     }
   }
 }

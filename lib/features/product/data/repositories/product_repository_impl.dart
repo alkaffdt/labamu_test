@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:labamu_test/core/configs/app_config.dart';
 import 'package:labamu_test/features/product/domain/models/product_model.dart';
 
@@ -48,12 +49,43 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<bool> createProduct(Product product) {
-    return remoteDataSource.createProduct(product);
+  Future<bool> createProduct(Product product) async {
+    await localDataSource.insertProduct(product, isSynced: false);
+
+    try {
+      final isCreated = await remoteDataSource.createProduct(product);
+      await localDataSource.markAsSynced(product.id!);
+      return isCreated;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
   Future<bool> updateProduct(Product product) {
     return remoteDataSource.updateProduct(product);
+  }
+
+  @override
+  Future<void> syncPendingProducts() async {
+    final pending = await localDataSource.getUnsyncedProducts();
+
+    for (final product in pending) {
+      try {
+        final success = await remoteDataSource.createProduct(product);
+
+        if (success) {
+          await localDataSource.markAsSynced(product.id!);
+        }
+      } on DioException catch (error) {
+        if (error.type == DioExceptionType.connectionError ||
+            error.type == DioExceptionType.connectionTimeout ||
+            error.type == DioExceptionType.unknown) {
+          break;
+        }
+      } catch (error) {
+        continue;
+      }
+    }
   }
 }
