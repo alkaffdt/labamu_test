@@ -54,7 +54,11 @@ class ProductRepositoryImpl implements ProductRepository {
 
     try {
       final isCreated = await remoteDataSource.createProduct(product);
-      await localDataSource.markAsSynced(product.id!);
+
+      if (isCreated) {
+        await localDataSource.markAsSynced(product.id!);
+      }
+
       return isCreated;
     } catch (e) {
       return false;
@@ -62,8 +66,20 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<bool> updateProduct(Product product) {
-    return remoteDataSource.updateProduct(product);
+  Future<bool> updateProduct(Product product) async {
+    await localDataSource.updateProduct(product, isSynced: false);
+
+    try {
+      final isPosted = await remoteDataSource.updateProduct(product);
+
+      if (isPosted) {
+        await localDataSource.markAsSynced(product.id!);
+      }
+
+      return isPosted;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
@@ -72,20 +88,32 @@ class ProductRepositoryImpl implements ProductRepository {
 
     for (final product in pending) {
       try {
-        final success = await remoteDataSource.createProduct(product);
-
+        final success = await _syncSingleProduct(product);
         if (success) {
           await localDataSource.markAsSynced(product.id!);
         }
-      } on DioException catch (error) {
-        if (error.type == DioExceptionType.connectionError ||
-            error.type == DioExceptionType.connectionTimeout ||
-            error.type == DioExceptionType.unknown) {
-          break;
-        }
-      } catch (error) {
+      } on DioException catch (e) {
+        if (_isConnectionError(e)) break;
+      } catch (_) {
         continue;
       }
     }
+  }
+
+  Future<bool> _syncSingleProduct(Product product) async {
+    try {
+      return await remoteDataSource.updateProduct(product);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        return await remoteDataSource.createProduct(product);
+      }
+      rethrow;
+    }
+  }
+
+  bool _isConnectionError(DioException e) {
+    return e.type == DioExceptionType.connectionError ||
+        e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.unknown;
   }
 }

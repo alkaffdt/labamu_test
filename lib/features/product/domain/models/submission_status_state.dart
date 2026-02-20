@@ -1,4 +1,4 @@
-enum SubmissionStatus { initial, loading, success, error }
+enum SubmissionStatus { initial, loading, success, unsynced, error }
 
 class SubmissionStatusState {
   final SubmissionStatus status;

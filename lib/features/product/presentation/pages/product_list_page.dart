@@ -21,14 +21,7 @@ class ProductListPage extends ConsumerWidget {
       addProductControllerProvider.select((value) => value.submissionStatus),
       (previous, next) {
         switch (next) {
-          case SubmissionStatus.success:
-            context.pop();
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('Products synced')));
-            break;
-
-          case SubmissionStatus.error:
+          case SubmissionStatus.unsynced:
             context.pop();
             ScaffoldMessenger.of(
               context,

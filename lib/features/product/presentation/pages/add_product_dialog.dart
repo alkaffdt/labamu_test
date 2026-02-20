@@ -107,7 +107,7 @@ class _SubmitButton extends ConsumerWidget {
       ),
       onPressed: isValidated
           ? () async {
-              ref.read(addProductControllerProvider.notifier).submitProduct();
+              ref.read(addProductControllerProvider.notifier).addProduct();
             }
           : null,
       child: Text(

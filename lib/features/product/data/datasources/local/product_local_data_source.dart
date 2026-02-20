@@ -10,10 +10,13 @@ abstract class ProductLocalDataSource {
     int offset = 0,
   });
   Future<void> saveProducts(List<Product> products);
+  //
+  Future<void> insertProduct(Product product, {required bool isSynced});
+  Future<void> updateProduct(Product product, {required bool isSynced});
+  //
   Future<List<Product>> getUnsyncedProducts();
   Future<void> markAsSynced(String id);
   Future<void> clearProducts();
-  Future<void> insertProduct(Product product, {required bool isSynced});
 }
 
 class ProductLocalDataSourceImpl implements ProductLocalDataSource {
@@ -73,6 +76,21 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     }
 
     await batch.commit(noResult: true);
+  }
+
+  @override
+  Future<void> updateProduct(Product product, {required bool isSynced}) async {
+    final db = await _databaseService.database;
+
+    final dbMap = product.toDb();
+    dbMap['is_synced'] = isSynced ? 1 : 0;
+
+    await db.update(
+      'products',
+      dbMap,
+      where: 'id = ?',
+      whereArgs: [product.id],
+    );
   }
 
   @override
