@@ -64,4 +64,31 @@ extension PagingControllerExt<KeyType, ItemType>
   void replaceAll(List<ItemType> items) {
     itemList = items;
   }
+
+  Future<void> seamlessRefresh({
+    required Future<List<ItemType>> Function(dynamic firstKey) fetchPage,
+    required dynamic firstPageKey,
+    required dynamic Function(List<ItemType> items) getNextKey,
+  }) async {
+    final oldItems = itemList ?? [];
+
+    try {
+      final newItems = await fetchPage(firstPageKey);
+
+      final nextKey = getNextKey(newItems);
+
+      // Replace data
+      value = PagingState<KeyType, ItemType>(
+        itemList: newItems,
+        nextPageKey: nextKey,
+        error: null,
+      );
+    } catch (e) {
+      value = PagingState<KeyType, ItemType>(
+        itemList: oldItems,
+        nextPageKey: nextPageKey,
+        error: e,
+      );
+    }
+  }
 }

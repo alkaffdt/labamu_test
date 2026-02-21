@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:labamu_test/core/configs/app_config.dart';
+import 'package:labamu_test/extensions/paging_controller_extension.dart';
 import 'package:labamu_test/features/product/presentation/providers/product_pagination_controller_provider.dart';
 import 'package:labamu_test/features/product/presentation/providers/product_provider.dart';
 import '../../features/product/domain/repositories/product_repository.dart';
@@ -19,7 +20,14 @@ final syncManagerProvider = Provider<SyncManager>((ref) {
       Future.delayed(
         const Duration(seconds: AppConfig.staticDelayInSeconds),
         () {
-          // ref.read(productsPagingControllerProvider).refresh();
+          // refresh after sync & delay
+          ref
+              .read(productsPagingControllerProvider)
+              .seamlessRefresh(
+                fetchPage: (firstKey) => repo.getProducts(page: 1),
+                firstPageKey: 1,
+                getNextKey: (items) => items.isEmpty ? null : 2,
+              );
         },
       );
     },
@@ -46,9 +54,7 @@ class SyncManager {
     this.onSyncComplete,
   }) : connectivity = connectivity ?? Connectivity();
 
-  /// Call once when app starts
   Future<void> init() async {
-    // Sync immediately on start
     await _trySync();
 
     // Listen connectivity changes
