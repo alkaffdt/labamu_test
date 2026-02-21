@@ -48,6 +48,8 @@ class SyncManager {
   StreamSubscription? _connectivitySub;
   bool _isSyncing = false;
 
+  Timer? _periodicTimer;
+
   SyncManager({
     required this.productRepository,
     Connectivity? connectivity,
@@ -66,6 +68,15 @@ class SyncManager {
         onSyncComplete?.call();
       }
     });
+
+    // wiil refetch every x secs
+    _periodicTimer = Timer.periodic(
+      const Duration(seconds: AppConfig.syncIntervalInSeconds),
+      (_) async {
+        await _trySync();
+        onSyncComplete?.call();
+      },
+    );
   }
 
   Future<void> dispose() async {
