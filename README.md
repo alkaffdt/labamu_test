@@ -1,4 +1,4 @@
-# Offline-First Product App (Flutter)
+# Offline-First Product App
 
 ## Overview
 
