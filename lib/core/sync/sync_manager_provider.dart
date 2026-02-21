@@ -81,6 +81,7 @@ class SyncManager {
 
   Future<void> dispose() async {
     await _connectivitySub?.cancel();
+    _periodicTimer?.cancel();
   }
 
   Future<void> _trySync() async {
