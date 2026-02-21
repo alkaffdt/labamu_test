@@ -33,7 +33,6 @@ lib/
 │   │   └── database_service.dart
 │   ├── network/
 │   │   ├── dio_client.dart
-│   │   └── network_info.dart
 │   ├── errors/
 │   │   ├── failures.dart
 │   │   └── exceptions.dart
@@ -104,6 +103,7 @@ This means:
 -   Writes are saved locally first
 -   Network is only used for synchronization
 -   App works fully offline
+-   Sync runs periodically every X seconds ( X = configured via `AppConfig.syncIntervalInSeconds`).
 
 ------------------------------------------------------------------------
 
@@ -117,7 +117,7 @@ This means:
                     ↓\
              Local DB updated\ 
                     ↓\
-              UI updates again
+              UI updates 
 
 ------------------------------------------------------------------------
 
