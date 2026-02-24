@@ -1,6 +1,6 @@
 class AppConfig {
   const AppConfig._();
-  static const String baseUrl = 'https://api.example.com';
+  static const String baseUrl = 'http://10.0.2.2:3000';
   static const int pageLimit = 10;
   //
   static const int staticDelayInSeconds = 3;
